@@ -288,10 +288,11 @@ void ImuProcess::UndistortPcl(const MeasureGroup &meas, esekfom::esekf<state_ikf
     
     in.acc = acc_avr;
     in.gyro = angvel_avr;
-    Q.block<3, 3>(0, 0).diagonal() = cov_gyr;
-    Q.block<3, 3>(3, 3).diagonal() = cov_acc;
-    Q.block<3, 3>(6, 6).diagonal() = cov_bias_gyr;
-    Q.block<3, 3>(9, 9).diagonal() = cov_bias_acc;
+
+    Q.block<3, 3>(0, 0).diagonal() = cov_gyr; // 角速度噪声
+    Q.block<3, 3>(3, 3).diagonal() = cov_acc; // 加速度噪声
+    Q.block<3, 3>(6, 6).diagonal() = cov_bias_gyr; // 陀螺仪偏置噪声
+    Q.block<3, 3>(9, 9).diagonal() = cov_bias_acc; // 加速度计偏置噪声
     kf_state.predict(dt, Q, in);
 
     /* save the poses at each IMU measurements */
@@ -302,7 +303,7 @@ void ImuProcess::UndistortPcl(const MeasureGroup &meas, esekfom::esekf<state_ikf
     {
       acc_s_last[i] += imu_state.grav[i];
     }
-    double &&offs_t = tail->header.stamp.toSec() - pcl_beg_time;
+    double &&offs_t = tail->header.stamp.toSec() - pcl_beg_time; // tail->header.stamp.toSec() - head->header.stamp.toSec();
     IMUpose.push_back(set_pose6d(offs_t, acc_s_last, angvel_last, imu_state.vel, imu_state.pos, imu_state.rot.toRotationMatrix()));
   }
 
