@@ -6,7 +6,7 @@
 
 	<rosparam command="load" file="$(find fast_lio)/config/fmcw_goodimu.yaml" />
     <!-- <arg name="bag_file"  default="/media/iot/JianpingData/NTU_Helmet/campus/helmet/helmet_03.bag"/> -->
-	<arg name="bag_file"  default="/media/jianping/Jianping/helmet_fmcw/2026-02-01-17-06-46.bag"/> 
+	<arg name="bag_file"  default="/home/amov/ws_FASTLIO_KFY/helmet_fmcw_bag_files/2026-02-01-13-54-53.bag"/> 
 
 	<param name="feature_extract_enable" type="bool" value="0"/>
 	<param name="point_filter_num" type="int" value="1"/>

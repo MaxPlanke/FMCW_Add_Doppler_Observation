@@ -306,18 +306,34 @@ void ImuProcess::UndistortPcl(const MeasureGroup &meas, esekfom::esekf<state_ikf
     IMUpose.push_back(set_pose6d(offs_t, acc_s_last, angvel_last, imu_state.vel, imu_state.pos, imu_state.rot.toRotationMatrix()));
   }
 
+
+
+
+
+
+
+
   /*** calculated the pos and attitude prediction at the frame-end ***/
   double note = pcl_end_time > imu_end_time ? 1.0 : -1.0;
   dt = note * (pcl_end_time - imu_end_time);
-  kf_state.predict(dt, Q, in);
+  kf_state.predict(dt, Q, in); // 预测到lidar帧结束时的状态
   
-  imu_state = kf_state.get_x();
+  imu_state = kf_state.get_x(); // 读取预测的状态
   last_imu_ = meas.imu.back();
   last_lidar_end_time_ = pcl_end_time;
 
+
+
+
+
+
+
   /*** undistort each lidar point (backward propagation) ***/
-  if (pcl_out.points.begin() == pcl_out.points.end()) return;
+  if (pcl_out.points.begin() == pcl_out.points.end()) return; // empty point cloud
   auto it_pcl = pcl_out.points.end() - 1;
+
+
+  
   for (auto it_kp = IMUpose.end() - 1; it_kp != IMUpose.begin(); it_kp--)
   {
     auto head = it_kp - 1;
